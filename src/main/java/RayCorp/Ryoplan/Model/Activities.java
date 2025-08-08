@@ -12,6 +12,15 @@ import java.time.LocalTime;
 @Table(name="aktivitas")
 public class Activities {
 
+    public Activities(){};
+    public Activities(String activity_id,String activity_name,BigDecimal budget,LocalTime jam_mulai,LocalTime jam_selesai){
+        this.activity_id = activity_id;
+        this.activity_name = activity_name;
+        this.budget = budget;
+        this.jam_mulai = jam_mulai;
+        this.jam_selesai = jam_selesai;
+    };
+
     @Id
     @Column(length=12,columnDefinition="CHAR(12)",name = "activity_id")
     private String activity_id;
