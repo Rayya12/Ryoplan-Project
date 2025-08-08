@@ -23,9 +23,20 @@ public class Activities {
     private BigDecimal budget;
 
     @Column(name = "jam_mulai")
-    private LocalTime jamMulai;
+    private LocalTime jam_mulai;
 
     @Column(name= "jam_selesai")
-    private LocalTime jamSelesai;
+    private LocalTime jam_selesai;
 
+    public String getActivity_id() {return activity_id;}
+    public BigDecimal getBudget() {return budget;}
+    public LocalTime getJam_mulai() {return jam_mulai;}
+    public LocalTime getJam_selesai() {return jam_selesai;}
+    public String getActivity_name() {return activity_name;}
+
+    public void setActivity_id(String activity_id) {this.activity_id = activity_id;}
+    public void setActivity_name(String activity_name) {this.activity_name = activity_name;}
+    public void setBudget(BigDecimal budget) {this.budget = budget;}
+    public void setJam_mulai(LocalTime jam_mulai) {this.jam_mulai = jam_mulai;}
+    public void setJam_selesai(LocalTime jam_selesai) {this.jam_selesai = jam_selesai;}
 }
