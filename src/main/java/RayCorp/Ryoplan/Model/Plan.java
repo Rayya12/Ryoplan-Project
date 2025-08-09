@@ -42,6 +42,9 @@ public class Plan {
     @OneToMany(mappedBy = "plan",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Day> list_day = new ArrayList<Day>();
 
+    @ManyToMany(mappedBy = "planList")
+    private List<User> userList = new ArrayList<User>();
+
     public void setDescription(String description) {this.description = description;}
     public void setPlan_id(Long plan_id) {this.plan_id = plan_id;}
     public void setPlan_name(String plan_name) {this.plan_name = plan_name;}
@@ -50,6 +53,7 @@ public class Plan {
     public void setBudget_rn(BigDecimal budget_rn) {this.budget_rn = budget_rn;}
     public void setTanggal_mulai(LocalDate tanggal_mulai) {this.tanggal_mulai = tanggal_mulai;}
     public void setTanggal_selesai(LocalDate tanggal_selesai) {this.tanggal_selesai = tanggal_selesai;}
+    public void setUserList(List<User> userList) {this.userList = userList;}
 
     public Long getPlan_id() {return plan_id;}
     public List<Day> getList_day() {return list_day;}
@@ -59,6 +63,7 @@ public class Plan {
     public BigDecimal getBudget_rn() {return budget_rn;}
     public LocalDate getTanggal_mulai() {return tanggal_mulai;}
     public LocalDate getTanggal_selesai() {return tanggal_selesai;}
+    public List<User> getUserList() {return userList;}
 
     public BigDecimal getBudget_plan(){
         if (list_day == null || list_day.isEmpty()){
@@ -66,7 +71,7 @@ public class Plan {
         }else{
             BigDecimal total = BigDecimal.ZERO;
             for (Day hari:list_day){
-                total.add(hari.getBudgetForDay());
+                total = total.add(hari.getBudgetForDay());
             }
             return total;
         }
