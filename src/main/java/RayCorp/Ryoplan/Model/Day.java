@@ -12,11 +12,12 @@ public class Day {
 
     public Day(){};
 
-    public Day(Integer day_counter,String day_title,String description,BigDecimal biaya_hotel){
+    public Day(Integer day_counter,String day_title,String description,BigDecimal biaya_hotel,Plan plan){
         this.day_counter = day_counter;
         this.day_title = day_title;
         this.description = description;
         this.biaya_hotel = biaya_hotel;
+        this.plan = plan;
     }
 
     @Id
@@ -38,12 +39,17 @@ public class Day {
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activities> listAktivitas = new ArrayList<>();
 
-    public Integer getDay_counter() {return day_counter;}
-    public Long getDay_id() {return day_id;}
-    public String getDay_title() {return day_title;}
-    public List<Activities> getListAktivitas() {return listAktivitas;}
-    public String getDescription() {return description;}
-    public BigDecimal getBiaya_hotel() {return biaya_hotel;}
+    @ManyToOne
+    @JoinColumn(name = "plan_id",nullable = false)
+    private Plan plan;
+
+    public Integer getDay_counter() {return this.day_counter;}
+    public Long getDay_id() {return this.day_id;}
+    public String getDay_title() {return this.day_title;}
+    public List<Activities> getListAktivitas() {return this.listAktivitas;}
+    public String getDescription() {return this.description;}
+    public BigDecimal getBiaya_hotel() {return this.biaya_hotel;}
+    public Plan getPlan(){return this.plan;}
 
     public void setDay_id(Long day_id) {this.day_id = day_id;}
     public void setDay_counter(Integer day_counter) {this.day_counter = day_counter;}
@@ -54,9 +60,9 @@ public class Day {
 
     public BigDecimal getBudgetForDay(){
         if (this.listAktivitas == null || this.listAktivitas.isEmpty()){
-            return new BigDecimal("0");
+            return BigDecimal.ZERO;
         }else{
-            BigDecimal total = BigDecimal.valueOf(0);
+            BigDecimal total = BigDecimal.ZERO;
             for (Activities aktifitas: this.listAktivitas){
                 total = total.add(aktifitas.getBudget());
             }
