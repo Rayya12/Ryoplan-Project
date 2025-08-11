@@ -34,7 +34,7 @@ public class Activities {
     @Column(name= "jam_selesai")
     private LocalTime jam_selesai;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "day_id",nullable = false)
     private Day day;
 

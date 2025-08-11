@@ -39,7 +39,7 @@ public class Day {
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activities> listAktivitas = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id",nullable = false)
     private Plan plan;
 
