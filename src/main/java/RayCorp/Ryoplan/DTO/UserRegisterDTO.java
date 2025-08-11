@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 public class UserRegisterDTO {
 
+
     @NotBlank(message = "Username tidak boleh kosong")
     private String username;
 
