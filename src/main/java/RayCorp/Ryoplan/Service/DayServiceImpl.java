@@ -1,9 +1,7 @@
 package RayCorp.Ryoplan.Service;
 
-import RayCorp.Ryoplan.DTO.DayDTO;
-import RayCorp.Ryoplan.DTO.PlanDayDTO;
-import RayCorp.Ryoplan.DTO.PlanShowDTO;
-import RayCorp.Ryoplan.DTO.PlanUserDTO;
+import RayCorp.Ryoplan.DTO.*;
+import RayCorp.Ryoplan.Mapper.DayMapper;
 import RayCorp.Ryoplan.Mapper.PlanMapper;
 import RayCorp.Ryoplan.Model.Activities;
 import RayCorp.Ryoplan.Model.Day;
@@ -55,13 +53,7 @@ public class DayServiceImpl implements DayService{
         }
 
         Day savedDay = dayRepository.save(new_day);
-
-        DayDTO response = new DayDTO();
-        response.setDay_id(savedDay.getDay_id());
-        response.setDay_counter(savedDay.getDay_counter());
-        response.setDay_title(savedDay.getDay_title());
-        PlanShowDTO planShowDTO = PlanMapper.toPlanShowDTO(savedDay.getPlan());
-
+        return DayMapper.toDayDTO(savedDay);
 
     }
 
