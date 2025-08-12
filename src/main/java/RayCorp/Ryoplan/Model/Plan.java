@@ -83,6 +83,10 @@ public class Plan {
         }
     }
 
+    public Float getProgress(){
+        return (this.getBudget_plan().subtract(this.getBudget_rn())).divide(this.getBudget_plan()).multiply(BigDecimal.valueOf(100)).floatValue();
+    }
+
 
 
 

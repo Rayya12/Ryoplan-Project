@@ -57,6 +57,7 @@ public class Day {
     public void setDescription(String description) {this.description = description;}
     public void setListAktivitas(List<Activities> listAktivitas) {this.listAktivitas = listAktivitas;}
     public void setBiaya_hotel(BigDecimal biaya_hotel) {this.biaya_hotel = biaya_hotel;}
+    public void setPlan(Plan plan) {this.plan = plan;}
 
     public BigDecimal getBudgetForDay(){
         if (this.listAktivitas == null || this.listAktivitas.isEmpty()){
