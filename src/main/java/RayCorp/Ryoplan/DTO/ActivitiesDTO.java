@@ -2,16 +2,22 @@ package RayCorp.Ryoplan.DTO;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AcrtivitiesShowDTO {
+
+public class ActivitiesDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long activity_id;
+    // ini menyebabkan dia akan muncul saat response tapi tidak muncul saat request
+
     private String activity_name;
     private BigDecimal budget;
     private LocalTime jam_mulai;
     private LocalTime jam_selesai;
 
-    AcrtivitiesShowDTO(){}
-    AcrtivitiesShowDTO(Long activity_id,String activity_name,BigDecimal budget,LocalTime jam_mulai,LocalTime jam_selesai){
+    public ActivitiesDTO(){}
+    public ActivitiesDTO(Long activity_id, String activity_name, BigDecimal budget, LocalTime jam_mulai, LocalTime jam_selesai){
         this.activity_id = activity_id;
         this.activity_name = activity_name;
         this.budget = budget;
