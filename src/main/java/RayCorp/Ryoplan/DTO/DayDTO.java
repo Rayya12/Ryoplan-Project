@@ -11,7 +11,10 @@ public class DayDTO {
 
     private String day_title;
     private String description;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer day_counter;
+
     private BigDecimal biaya_hotel;
     private PlanShowDTO plan;
     private ActivitiesDTO list_aktivitas;

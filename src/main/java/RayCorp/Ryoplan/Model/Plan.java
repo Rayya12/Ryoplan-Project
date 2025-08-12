@@ -39,6 +39,9 @@ public class Plan {
     @Column(name="budget_rn",columnDefinition = "DECIMAL(12,2)")
     private BigDecimal budget_rn;
 
+    @Column(name="available_counter")
+    private Integer available_counter = 1;
+
     @OneToMany(mappedBy = "plan",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Day> list_day = new ArrayList<Day>();
 
@@ -54,6 +57,8 @@ public class Plan {
     public void setTanggal_mulai(LocalDate tanggal_mulai) {this.tanggal_mulai = tanggal_mulai;}
     public void setTanggal_selesai(LocalDate tanggal_selesai) {this.tanggal_selesai = tanggal_selesai;}
     public void setUserList(List<User> userList) {this.userList = userList;}
+    public void setAvailable_counter(Integer available_counter) {this.available_counter = available_counter;}
+
 
     public Long getPlan_id() {return plan_id;}
     public List<Day> getList_day() {return list_day;}
@@ -64,6 +69,7 @@ public class Plan {
     public LocalDate getTanggal_mulai() {return tanggal_mulai;}
     public LocalDate getTanggal_selesai() {return tanggal_selesai;}
     public List<User> getUserList() {return userList;}
+    public Integer getAvailable_counter() {return available_counter;}
 
     public BigDecimal getBudget_plan(){
         if (list_day == null || list_day.isEmpty()){
