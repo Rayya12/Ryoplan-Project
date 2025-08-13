@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface DayService {
     public DayDTO createDay(DayDTO dto);
-    public DayDTO updateDay(DayDTO dto);
+    public DayDTO updateDay(Long day_id,DayDTO dto);
     public List<DayDTO> listDayByPlan(Long plan_id);
     public void upDay(Long day_id);
     public void downDay(Long day_id);

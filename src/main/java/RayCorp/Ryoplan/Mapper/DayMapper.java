@@ -28,4 +28,6 @@ public class DayMapper {
         ).toList());
         return dayDTO;
     }
+
+    public static Day fromDTO()
 }
