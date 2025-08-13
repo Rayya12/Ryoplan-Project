@@ -84,7 +84,7 @@ public class DayServiceImpl implements DayService{
 
     @Override
     public List<DayDTO> listDayByPlan(Long plan_id) {
-        List<Day> listDay = dayRepository.findAllByPlan_idOrderByDay_CounterAsc(plan_id);
+        List<Day> listDay = dayRepository.findAllByPlan_idOrderByDay_counterAsc(plan_id);
         if (listDay != null){
             return listDay.stream().map(DayMapper::toDayDTO).toList();
         }else{
@@ -147,6 +147,37 @@ public class DayServiceImpl implements DayService{
 
     @Override
     public void deleteDay(Long day_id) {
+        Day day = dayRepository.findById(day_id)
+                .orElseThrow(() -> new EntityNotFoundException("Day with day_id: " + day_id + " is not found"));
 
+        Plan plan = day.getPlan();
+
+
+        boolean isLast = (day.getDay_counter() == plan.getAvailable_counter()-1);
+
+        if (isLast) {
+            plan.setAvailable_counter(plan.getAvailable_counter() - 1);
+            planRepository.save(plan);
+            dayRepository.deleteById(day_id);
+            return;
+        }
+
+        List<Day> listDay =
+                dayRepository.findAllByPlan_idAndDay_counterGreaterThanOrderByDay_counterAsc(
+                        plan.getPlan_id(), day.getDay_counter());
+
+
+        day.setDay_counter(0);
+        dayRepository.save(day);
+
+        for (Day dayup : listDay) {
+            dayup.setDay_counter(dayup.getDay_counter() - 1);
+            dayRepository.save(dayup);
+        }
+
+        plan.setAvailable_counter(plan.getAvailable_counter() - 1);
+        planRepository.save(plan);
+
+        dayRepository.deleteById(day_id);
     }
 }
