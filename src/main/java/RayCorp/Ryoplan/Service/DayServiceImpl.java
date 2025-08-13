@@ -121,9 +121,28 @@ public class DayServiceImpl implements DayService{
         dayRepository.save(topDay);
     }
 
+
     @Override
     public void downDay(Long day_id) {
+        Day day = dayRepository.findById(day_id).orElseThrow(()->new EntityNotFoundException("Day with day_id: "+day_id+" is not found"));
+        if (day.getDay_counter() == day.getPlan().getAvailable_counter()-1){
+            throw new IllegalStateException("Cannot move further down");
+        }
+        Long plan_id = day.getPlan().getPlan_id();
+        Day downDay = dayRepository.findByDay_counterAndPlan_id(day.getDay_counter()+1,plan_id);
 
+        if (downDay == null){
+            throw new IllegalStateException("Down day not found for plan " + plan_id);
+        }
+
+        downDay.setDay_counter(0);
+        dayRepository.save(downDay);
+
+        day.setDay_counter(day.getDay_counter()+1);
+        dayRepository.save(day);
+
+        downDay.setDay_counter(day.getDay_counter()-1);
+        dayRepository.save(downDay);
     }
 
     @Override
