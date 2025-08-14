@@ -50,5 +50,13 @@ public class Activities {
     public void setBudget(BigDecimal budget) {this.budget = budget;}
     public void setJamMulai(LocalTime jamMulai) {this.jamMulai = jamMulai;}
     public void setJamSelesai(LocalTime jamSelesai) {this.jamSelesai = jamSelesai;}
-    public void setDay(Day day) {this.day = day;}
+    public void setDay(Day day) {
+        if (this.day != null){
+            day.getListAktivitas().remove(this);
+        }
+        this.day = day;
+        if (day!=null && !day.getListAktivitas().contains(this)){
+            day.getListAktivitas().add(this);
+        }
+    }
 }

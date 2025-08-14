@@ -92,6 +92,28 @@ public class Plan {
         return (this.getBudgetPlan().subtract(this.getBudgetRn())).divide(this.getBudgetPlan()).multiply(BigDecimal.valueOf(100)).floatValue();
     }
 
+    public void addUser(User user){
+        if (userList.add(user)){
+            user.addPlan(this);
+        }
+    }
+
+    public void removeUser(User user) {
+        if(userList.remove(user)){
+            user.removePlan(this);
+        }
+    };
+
+    public void addDay(Day day) {
+        listDay.add(day);
+        day.setPlan(this); // jaga sinkronisasi dua arah
+    }
+
+    public void removeDay(Day day) {
+        listDay.remove(day);     // hapus dari koleksi Plan
+        day.setPlan(null);       // putuskan hubungan di sisi Day
+    }
+
 
 
 

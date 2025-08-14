@@ -86,12 +86,14 @@ public class User {
     public void setPlanList(List<Plan> planList) {this.planList = planList;}
 
     public void addPlan(Plan p) {
-        this.planList.add(p);
-        p.getUserList().add(this);
+        if (this.planList.add(p)){
+            p.getUserList().add(this);
+        }
     }
 
     public void removePlan(Plan p) {
-        this.planList.remove(p);
-        p.getUserList().remove(this);
+        if (this.planList.remove(p)){
+            p.getUserList().remove(this);
+        }
     }
 }

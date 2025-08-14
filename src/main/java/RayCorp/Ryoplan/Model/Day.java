@@ -57,7 +57,15 @@ public class Day {
     public void setDescription(String description) {this.description = description;}
     public void setListAktivitas(List<Activities> listAktivitas) {this.listAktivitas = listAktivitas;}
     public void setBiayaHotel(BigDecimal biayaHotel) {this.biayaHotel = biayaHotel;}
-    public void setPlan(Plan plan) {this.plan = plan;}
+    public void setPlan(Plan plan) {
+        if (this.plan != null){
+            plan.getListDay().remove(this);
+        }
+        this.plan = plan;
+        if (plan != null && !plan.getListDay().contains(this)) {
+            plan.getListDay().add(this);
+        }
+    }
 
     public BigDecimal getBudgetForDay(){
         if (this.listAktivitas == null || this.listAktivitas.isEmpty()){
@@ -75,6 +83,13 @@ public class Day {
         listAktivitas.add(aktivitas);
         aktivitas.setDay(this); // jaga sinkronisasi dua arah
     }
+
+    public void removeAktivitas(Activities aktivitas) {
+        listAktivitas.remove(aktivitas);
+        aktivitas.setDay(null);
+    }
+
+
 
 
 
