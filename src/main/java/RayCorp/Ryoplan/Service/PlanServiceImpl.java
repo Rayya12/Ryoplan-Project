@@ -78,6 +78,18 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<PlanListDTO> getPlanListForUser(Long user_id) {
-        return null;
+        List<Plan> listPlanById = planRepository.findAllPlanByUserId(user_id);
+        List<PlanListDTO> dtoPlanList = new ArrayList<>();
+        if (listPlanById != null && !listPlanById.isEmpty()){
+            dtoPlanList = listPlanById.stream().map(planku -> {
+                PlanListDTO dto = new PlanListDTO();
+                dto.setPlan_name(planku.getPlanName());
+                dto.setBudget(planku.getBudgetPlan());
+                dto.setTanggal_mulai(planku.getTanggalMulai());
+                dto.setProgress(planku.getProgress());
+                return dto;
+            }).toList();
+        }
+        return dtoPlanList;
     }
 }
