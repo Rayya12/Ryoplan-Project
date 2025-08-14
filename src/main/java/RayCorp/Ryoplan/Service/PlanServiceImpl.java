@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public class PlanServiceImpl implements PlanService {
         plan.setTanggalSelesai(cdto.getTanggal_selesai());
         cdto.getUserList().forEach(userDTO -> {
             User user = userRepository.findById(userDTO.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("User with id"+userDTO.getId()+"not found"));
             plan.addUser(user);
         });
 
@@ -48,21 +49,35 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanShowDTO updatePlan(CreatePlanDTO cdto,Long plan_id) {
-        return null;
+        Plan plan = planRepository.findById(plan_id).orElseThrow(()->new EntityNotFoundException("Plan with id "+plan_id+" not found"));
+        plan.setPlanName(cdto.getPlan_name());
+        plan.setDescription(cdto.getDescription());
+        plan.setLocation(cdto.getLocation());
+        plan.setTanggalMulai(cdto.getTanggal_mulai());
+        plan.setTanggalSelesai(cdto.getTanggal_selesai());
+        List<User> listUser = new ArrayList<User>();
+        List<User> users = cdto.getUserList().stream()
+                .map(dto -> userRepository.findById(dto.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found")))
+                .toList();
+        plan.replaceUsers(users);
+
+        Plan saved_plan = planRepository.save(plan);
+        return PlanMapper.toPlanShowDTO(saved_plan);
     }
 
     @Override
     public void deletePlan(Long plan_id) {
-
+        planRepository.deleteById(plan_id);
     }
 
     @Override
     public PlanShowDTO getPlanFromId(Long plan_id) {
-        return null;
+        return PlanMapper.toPlanShowDTO(planRepository.findById(plan_id).orElseThrow(()->new EntityNotFoundException("Plan with id: "+plan_id+" is not found")));
     }
 
     @Override
-    public List<PlanListDTO> getPlanListForUser(Long plan_id, Long user_id) {
-        return List.of();
+    public List<PlanListDTO> getPlanListForUser(Long user_id) {
+        return null;
     }
 }

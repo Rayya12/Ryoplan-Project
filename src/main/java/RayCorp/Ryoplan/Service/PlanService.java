@@ -11,7 +11,7 @@ public interface PlanService {
     public PlanShowDTO updatePlan(CreatePlanDTO cdto,Long plan_id);
     public void deletePlan(Long plan_id);
     public PlanShowDTO getPlanFromId(Long plan_id);
-    public List<PlanListDTO> getPlanListForUser(Long plan_id, Long user_id);
+    public List<PlanListDTO> getPlanListForUser(Long user_id);
 
 
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -114,6 +115,21 @@ public class Plan {
         day.setPlan(null);       // putuskan hubungan di sisi Day
     }
 
+    public void replaceUsers(List<User> newUsers) {
+        for (Iterator<User> it = this.userList.iterator(); it.hasNext(); ) {
+            User u = it.next();
+            if (!newUsers.contains(u)) {
+                it.remove();
+                u.getPlanList().remove(this);
+            }
+        }
+
+        for (User u : newUsers) {
+            if (this.userList.add(u)) {
+                u.getPlanList().add(this);
+            }
+        }
+    }
 
 
 
