@@ -8,28 +8,28 @@ import RayCorp.Ryoplan.Model.Plan;
 public class PlanMapper {
     public static PlanShowDTO toPlanShowDTO(Plan plan){
         PlanShowDTO planShowDTO = new PlanShowDTO();
-        planShowDTO.setPlan_id(plan.getPlan_id());
-        planShowDTO.setPlan_name(plan.getPlan_name());
+        planShowDTO.setPlan_id(plan.getId());
+        planShowDTO.setPlan_name(plan.getPlanName());
         planShowDTO.setDescription(plan.getDescription());
-        planShowDTO.setBudget(plan.getBudget_plan());
-        planShowDTO.setAvailable_counter(plan.getAvailable_counter());
-        planShowDTO.setTanggal_mulai(plan.getTanggal_mulai());
-        planShowDTO.setTanggal_selesai(plan.getTanggal_selesai());
+        planShowDTO.setBudget(plan.getBudgetPlan());
+        planShowDTO.setAvailable_counter(plan.getAvailableCounter());
+        planShowDTO.setTanggal_mulai(plan.getTanggalMulai());
+        planShowDTO.setTanggal_selesai(plan.getTanggalSelesai());
         planShowDTO.setLocation(plan.getLocation());
         planShowDTO.setProgress(plan.getProgress());
 
         planShowDTO.setUserList(plan.getUserList().stream().map(user->{
             PlanUserDTO pld = new PlanUserDTO();
-            pld.setId(user.getUser_id());
+            pld.setId(user.getId());
             pld.setUser_name(user.getUsername());
             return pld;
         }).toList());
 
-        planShowDTO.setList_day(plan.getList_day().stream().map(day->{
+        planShowDTO.setList_day(plan.getListDay().stream().map(day->{
             PlanDayDTO pdd = new PlanDayDTO();
-            pdd.setDay_id(day.getDay_id());
-            pdd.setDay_counter(day.getDay_counter());
-            pdd.setDay_title(day.getDay_title());
+            pdd.setDay_id(day.getId());
+            pdd.setDay_counter(day.getDayCounter());
+            pdd.setDay_title(day.getDayTitle());
             pdd.setBudget(pdd.getBudget());
             return pdd;
         }).toList());

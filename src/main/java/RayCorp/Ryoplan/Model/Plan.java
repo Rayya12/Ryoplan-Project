@@ -12,17 +12,22 @@ import java.util.List;
 public class Plan {
 
     public Plan(){};
-    public Plan(String plan_name,String description){
-        this.plan_name = plan_name;
+    public Plan(String planName, String description,String location,LocalDate tanggalMulai,LocalDate tanggalSelesai){
+        this.planName = planName;
         this.description = description;
+        this.location = location;
+        this.tanggalMulai = tanggalMulai;
+        this.tanggalSelesai = tanggalSelesai;
+        this.budgetRn = BigDecimal.ZERO;
+
     };
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long plan_id;
+    private Long id;
 
-    @Column(name = "plan_name",columnDefinition = "VARCHAR(40)",nullable = false)
-    private String plan_name;
+    @Column(name = "planName",columnDefinition = "VARCHAR(40)",nullable = false)
+    private String planName;
 
     @Column(name = "description",columnDefinition = "TEXT")
     private String description;
@@ -30,53 +35,53 @@ public class Plan {
     @Column(name = "location",columnDefinition = "VARCHAR(30)")
     private String location;
 
-    @Column(name = "tanggal_mulai")
-    private LocalDate tanggal_mulai;
+    @Column(name = "tanggalMulai")
+    private LocalDate tanggalMulai;
 
-    @Column(name="tanggal_selesai")
-    private LocalDate tanggal_selesai;
+    @Column(name="tanggalSelesai")
+    private LocalDate tanggalSelesai;
 
-    @Column(name="budget_rn",columnDefinition = "DECIMAL(12,2)")
-    private BigDecimal budget_rn;
+    @Column(name="budgetRn",columnDefinition = "DECIMAL(12,2) DEFAULT 0")
+    private BigDecimal budgetRn;
 
-    @Column(name="available_counter")
-    private Integer available_counter = 1;
+    @Column(name="availableCounter")
+    private Integer availableCounter = 1;
 
     @OneToMany(mappedBy = "plan",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Day> list_day = new ArrayList<Day>();
+    private List<Day> listDay = new ArrayList<Day>();
 
     @ManyToMany(mappedBy = "planList")
     private List<User> userList = new ArrayList<User>();
 
     public void setDescription(String description) {this.description = description;}
-    public void setPlan_id(Long plan_id) {this.plan_id = plan_id;}
-    public void setPlan_name(String plan_name) {this.plan_name = plan_name;}
-    public void setList_day(List<Day> list_day) {this.list_day = list_day;}
+    public void setId(Long id) {this.id = id;}
+    public void setPlanName(String planName) {this.planName = planName;}
+    public void setListDay(List<Day> listDay) {this.listDay = listDay;}
     public void setLocation(String location) {this.location = location;}
-    public void setBudget_rn(BigDecimal budget_rn) {this.budget_rn = budget_rn;}
-    public void setTanggal_mulai(LocalDate tanggal_mulai) {this.tanggal_mulai = tanggal_mulai;}
-    public void setTanggal_selesai(LocalDate tanggal_selesai) {this.tanggal_selesai = tanggal_selesai;}
+    public void setBudgetRn(BigDecimal budgetRn) {this.budgetRn = budgetRn;}
+    public void setTanggalMulai(LocalDate tanggalMulai) {this.tanggalMulai = tanggalMulai;}
+    public void setTanggalSelesai(LocalDate tanggalSelesai) {this.tanggalSelesai = tanggalSelesai;}
     public void setUserList(List<User> userList) {this.userList = userList;}
-    public void setAvailable_counter(Integer available_counter) {this.available_counter = available_counter;}
+    public void setAvailableCounter(Integer availableCounter) {this.availableCounter = availableCounter;}
 
 
-    public Long getPlan_id() {return plan_id;}
-    public List<Day> getList_day() {return list_day;}
+    public Long getId() {return id;}
+    public List<Day> getListDay() {return listDay;}
     public String getDescription() {return description;}
-    public String getPlan_name() {return plan_name;}
+    public String getPlanName() {return planName;}
     public String getLocation() {return location;}
-    public BigDecimal getBudget_rn() {return budget_rn;}
-    public LocalDate getTanggal_mulai() {return tanggal_mulai;}
-    public LocalDate getTanggal_selesai() {return tanggal_selesai;}
+    public BigDecimal getBudgetRn() {return budgetRn;}
+    public LocalDate getTanggalMulai() {return tanggalMulai;}
+    public LocalDate getTanggalSelesai() {return tanggalSelesai;}
     public List<User> getUserList() {return userList;}
-    public Integer getAvailable_counter() {return available_counter;}
+    public Integer getAvailableCounter() {return availableCounter;}
 
-    public BigDecimal getBudget_plan(){
-        if (list_day == null || list_day.isEmpty()){
+    public BigDecimal getBudgetPlan(){
+        if (listDay == null || listDay.isEmpty()){
             return BigDecimal.ZERO;
         }else{
             BigDecimal total = BigDecimal.ZERO;
-            for (Day hari:list_day){
+            for (Day hari: listDay){
                 total = total.add(hari.getBudgetForDay());
             }
             return total;
@@ -84,7 +89,7 @@ public class Plan {
     }
 
     public Float getProgress(){
-        return (this.getBudget_plan().subtract(this.getBudget_rn())).divide(this.getBudget_plan()).multiply(BigDecimal.valueOf(100)).floatValue();
+        return (this.getBudgetPlan().subtract(this.getBudgetRn())).divide(this.getBudgetPlan()).multiply(BigDecimal.valueOf(100)).floatValue();
     }
 
 

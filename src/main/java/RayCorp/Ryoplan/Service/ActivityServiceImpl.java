@@ -27,18 +27,19 @@ public class ActivityServiceImpl implements ActivityService {
 
         Activities activities = new Activities();
         activities.setDay(day);
-        activities.setActivity_name(activitiesDTO.getActivity_name());
+        activities.setActivityName(activitiesDTO.getActivity_name());
         activities.setBudget(activitiesDTO.getBudget());
-        activities.setJam_mulai(activitiesDTO.getJam_mulai());
-        activities.setJam_selesai(activitiesDTO.getJam_selesai());
+        activities.setJamMulai(activitiesDTO.getJam_mulai());
+        activities.setJamSelesai(activitiesDTO.getJam_selesai());
 
+        day.getListAktivitas().add(activities);
         Activities savedActivity = activitiesRepository.save(activities);
 
         ActivitiesDTO response = new ActivitiesDTO();
-        response.setActivity_id(savedActivity.getActivity_id());
-        response.setActivity_name(savedActivity.getActivity_name());
-        response.setJam_mulai(savedActivity.getJam_mulai());
-        response.setJam_selesai(savedActivity.getJam_selesai());
+        response.setActivity_id(savedActivity.getId());
+        response.setActivity_name(savedActivity.getActivityName());
+        response.setJam_mulai(savedActivity.getJamMulai());
+        response.setJam_selesai(savedActivity.getJamSelesai());
         response.setBudget(savedActivity.getBudget());
 
         return response;
@@ -48,10 +49,10 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivitiesDTO getActivityById(Long activity_id) {
         Activities searchedActivity = activitiesRepository.findById(activity_id).orElseThrow(()->new RuntimeException("Activity dengan id: "+activity_id+"Tidak ditemukan"));
         ActivitiesDTO response = new ActivitiesDTO();
-        response.setActivity_id(searchedActivity.getActivity_id());
-        response.setActivity_name(searchedActivity.getActivity_name());
-        response.setJam_mulai(searchedActivity.getJam_mulai());
-        response.setJam_selesai(searchedActivity.getJam_selesai());
+        response.setActivity_id(searchedActivity.getId());
+        response.setActivity_name(searchedActivity.getActivityName());
+        response.setJam_mulai(searchedActivity.getJamMulai());
+        response.setJam_selesai(searchedActivity.getJamSelesai());
         response.setBudget(searchedActivity.getBudget());
 
         return response;
@@ -60,31 +61,31 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<ActivitiesDTO> listActivitiesByDay(Long day_id) {
-        List<Activities> activities = activitiesRepository.findAllByDay_IdOrderByJamMulaiAsc(day_id);
+        List<Activities> activities = activitiesRepository.findAllByDayIdOrderByJamMulaiAsc(day_id);
         return activities.stream().map(a->new ActivitiesDTO(
-                a.getActivity_id(),
-                a.getActivity_name(),
+                a.getId(),
+                a.getActivityName(),
                 a.getBudget(),
-                a.getJam_mulai(),
-                a.getJam_selesai()
+                a.getJamMulai(),
+                a.getJamSelesai()
         )).toList();
     }
 
     @Override
     public ActivitiesDTO updateActivity(Long activityId, ActivitiesDTO dto) {
         Activities activities = activitiesRepository.findById(activityId).orElseThrow(()->new RuntimeException("Activity is not found"));
-        activities.setActivity_name(dto.getActivity_name());
+        activities.setActivityName(dto.getActivity_name());
         activities.setBudget(dto.getBudget());
-        activities.setJam_selesai(dto.getJam_selesai());
-        activities.setJam_mulai(dto.getJam_mulai());
+        activities.setJamSelesai(dto.getJam_selesai());
+        activities.setJamMulai(dto.getJam_mulai());
 
         Activities savedActivities = activitiesRepository.save(activities);
         ActivitiesDTO response = new ActivitiesDTO();
         response.setBudget(savedActivities.getBudget());
-        response.setActivity_id(savedActivities.getActivity_id());
-        response.setActivity_name(savedActivities.getActivity_name());
-        response.setJam_mulai(savedActivities.getJam_mulai());
-        response.setJam_selesai(savedActivities.getJam_selesai());
+        response.setActivity_id(savedActivities.getId());
+        response.setActivity_name(savedActivities.getActivityName());
+        response.setJam_mulai(savedActivities.getJamMulai());
+        response.setJam_selesai(savedActivities.getJamSelesai());
 
         return response;
     }

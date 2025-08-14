@@ -12,29 +12,29 @@ public class Day {
 
     public Day(){};
 
-    public Day(Integer day_counter,String day_title,String description,BigDecimal biaya_hotel,Plan plan){
-        this.day_counter = day_counter;
-        this.day_title = day_title;
+    public Day(Integer dayCounter, String dayTitle, String description, BigDecimal biayaHotel, Plan plan){
+        this.dayCounter = dayCounter;
+        this.dayTitle = dayTitle;
         this.description = description;
-        this.biaya_hotel = biaya_hotel;
+        this.biayaHotel = biayaHotel;
         this.plan = plan;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long day_id;
+    private Long id;
 
-    @Column(name="day_title",columnDefinition = "VARCHAR(40)")
-    private String day_title;
+    @Column(name="dayTitle",columnDefinition = "VARCHAR(40)")
+    private String dayTitle;
 
     @Column(name="description",columnDefinition = "TEXT")
     private String description;
 
-    @Column(name="day_counter")
-    private Integer day_counter;
+    @Column(name="dayCounter")
+    private Integer dayCounter;
 
-    @Column(columnDefinition = "DECIMAL(12,2) DEFAULT 0",name="biaya_hotel")
-    private BigDecimal biaya_hotel;
+    @Column(columnDefinition = "DECIMAL(12,2) DEFAULT 0",name="biayaHotel")
+    private BigDecimal biayaHotel;
 
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activities> listAktivitas = new ArrayList<>();
@@ -43,20 +43,20 @@ public class Day {
     @JoinColumn(name = "plan_id",nullable = false)
     private Plan plan;
 
-    public Integer getDay_counter() {return this.day_counter;}
-    public Long getDay_id() {return this.day_id;}
-    public String getDay_title() {return this.day_title;}
+    public Integer getDayCounter() {return this.dayCounter;}
+    public Long getId() {return this.id;}
+    public String getDayTitle() {return this.dayTitle;}
     public List<Activities> getListAktivitas() {return this.listAktivitas;}
     public String getDescription() {return this.description;}
-    public BigDecimal getBiaya_hotel() {return this.biaya_hotel;}
+    public BigDecimal getBiayaHotel() {return this.biayaHotel;}
     public Plan getPlan(){return this.plan;}
 
-    public void setDay_id(Long day_id) {this.day_id = day_id;}
-    public void setDay_counter(Integer day_counter) {this.day_counter = day_counter;}
-    public void setDay_title(String day_title) {this.day_title = day_title;}
+    public void setId(Long id) {this.id = id;}
+    public void setDayCounter(Integer dayCounter) {this.dayCounter = dayCounter;}
+    public void setDayTitle(String dayTitle) {this.dayTitle = dayTitle;}
     public void setDescription(String description) {this.description = description;}
     public void setListAktivitas(List<Activities> listAktivitas) {this.listAktivitas = listAktivitas;}
-    public void setBiaya_hotel(BigDecimal biaya_hotel) {this.biaya_hotel = biaya_hotel;}
+    public void setBiayaHotel(BigDecimal biayaHotel) {this.biayaHotel = biayaHotel;}
     public void setPlan(Plan plan) {this.plan = plan;}
 
     public BigDecimal getBudgetForDay(){
@@ -67,7 +67,7 @@ public class Day {
             for (Activities aktifitas: this.listAktivitas){
                 total = total.add(aktifitas.getBudget());
             }
-            return total.add(this.biaya_hotel);
+            return total.add(this.biayaHotel);
         }
     }
 

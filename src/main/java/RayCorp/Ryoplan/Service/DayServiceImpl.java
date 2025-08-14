@@ -2,7 +2,6 @@ package RayCorp.Ryoplan.Service;
 
 import RayCorp.Ryoplan.DTO.*;
 import RayCorp.Ryoplan.Mapper.DayMapper;
-import RayCorp.Ryoplan.Mapper.PlanMapper;
 import RayCorp.Ryoplan.Model.Activities;
 import RayCorp.Ryoplan.Model.Day;
 import RayCorp.Ryoplan.Model.Plan;
@@ -34,25 +33,27 @@ public class DayServiceImpl implements DayService{
 
         Day new_day = new Day();
         new_day.setPlan(plan);
-        new_day.setDay_title(dto.getDay_title());
+
+        new_day.setDayTitle(dto.getDay_title());
         new_day.setDescription(dto.getDescription());
-        new_day.setBiaya_hotel(dto.getBiaya_hotel());
+        new_day.setBiayaHotel(dto.getBiaya_hotel());
 
         // untuk counter hari + 1
-        new_day.setDay_counter(plan.getAvailable_counter());
-        plan.setAvailable_counter(plan.getAvailable_counter()+1);
+        new_day.setDayCounter(plan.getAvailableCounter());
+        plan.setAvailableCounter(plan.getAvailableCounter()+1);
 
         if (dto.getList_aktivitas() != null) {
             dto.getList_aktivitas().forEach(aktivitasDto -> {
                 Activities a = new Activities();
-                a.setActivity_name(aktivitasDto.getActivity_name());
+                a.setActivityName(aktivitasDto.getActivity_name());
                 a.setBudget(aktivitasDto.getBudget());
-                a.setJam_mulai(aktivitasDto.getJam_mulai());
-                a.setJam_selesai(aktivitasDto.getJam_selesai());
+                a.setJamMulai(aktivitasDto.getJam_mulai());
+                a.setJamSelesai(aktivitasDto.getJam_selesai());
                 new_day.addAktivitas(a); // ini set a.setDay(this) + add ke list
             });
         }
 
+        plan.getListDay().add(new_day);
         Day savedDay = dayRepository.save(new_day);
         return DayMapper.toDayDTO(savedDay);
 
@@ -62,18 +63,18 @@ public class DayServiceImpl implements DayService{
     public DayDTO updateDay(Long day_id,DayDTO dto) {
         Day day = dayRepository.findById(day_id).orElseThrow(()->new EntityNotFoundException("Day with id: "+day_id+" not found"));
         Plan plan = planRepository.findById(dto.getPlan().getPlan_id()).orElseThrow(()->new EntityNotFoundException("Plan with id: "+dto.getPlan().getPlan_id()+" not found" ));
-        day.setDay_title(dto.getDay_title());
+        day.setDayTitle(dto.getDay_title());
         day.setDescription(dto.getDescription());
         day.setPlan(plan);
-        day.setBiaya_hotel(dto.getBiaya_hotel());
+        day.setBiayaHotel(dto.getBiaya_hotel());
 
         if (dto.getList_aktivitas() != null) {
             dto.getList_aktivitas().forEach(aktivitasDto -> {
                 Activities a = new Activities();
-                a.setActivity_name(aktivitasDto.getActivity_name());
+                a.setActivityName(aktivitasDto.getActivity_name());
                 a.setBudget(aktivitasDto.getBudget());
-                a.setJam_mulai(aktivitasDto.getJam_mulai());
-                a.setJam_selesai(aktivitasDto.getJam_selesai());
+                a.setJamMulai(aktivitasDto.getJam_mulai());
+                a.setJamSelesai(aktivitasDto.getJam_selesai());
                 day.addAktivitas(a); // ini set a.setDay(this) + add ke list
             });
         }
@@ -84,7 +85,7 @@ public class DayServiceImpl implements DayService{
 
     @Override
     public List<DayDTO> listDayByPlan(Long plan_id) {
-        List<Day> listDay = dayRepository.findAllByPlan_idOrderByDay_counterAsc(plan_id);
+        List<Day> listDay = dayRepository.findAllByPlanIdOrderByDayCounterAsc(plan_id);
         if (listDay != null){
             return listDay.stream().map(DayMapper::toDayDTO).toList();
         }else{
@@ -99,25 +100,25 @@ public class DayServiceImpl implements DayService{
         Day day = dayRepository.findById(dayId)
                 .orElseThrow(() -> new EntityNotFoundException("Day id " + dayId + " not found"));
 
-        if (day.getDay_counter() == 1) {
+        if (day.getDayCounter() == 1) {
             throw new IllegalStateException("Cannot move up further");
         }
 
-        Long planId = day.getPlan().getPlan_id();
+        Long planId = day.getPlan().getId();
         Day topDay = dayRepository
-                .findByDay_counterAndPlan_id(day.getDay_counter() - 1, planId);
+                .findByDayCounterAndPlanId(day.getDayCounter() - 1, planId);
 
         if (topDay == null) {
             throw new IllegalStateException("Top day not found for plan " + planId);
         }
 
-        topDay.setDay_counter(0);
+        topDay.setDayCounter(0);
         dayRepository.save(topDay);
 
-        day.setDay_counter(day.getDay_counter() - 1);
+        day.setDayCounter(day.getDayCounter() - 1);
         dayRepository.save(day);
 
-        topDay.setDay_counter(day.getDay_counter() + 1);
+        topDay.setDayCounter(day.getDayCounter() + 1);
         dayRepository.save(topDay);
     }
 
@@ -125,23 +126,23 @@ public class DayServiceImpl implements DayService{
     @Override
     public void downDay(Long day_id) {
         Day day = dayRepository.findById(day_id).orElseThrow(()->new EntityNotFoundException("Day with day_id: "+day_id+" is not found"));
-        if (day.getDay_counter() == day.getPlan().getAvailable_counter()-1){
+        if (day.getDayCounter() == day.getPlan().getAvailableCounter()-1){
             throw new IllegalStateException("Cannot move further down");
         }
-        Long plan_id = day.getPlan().getPlan_id();
-        Day downDay = dayRepository.findByDay_counterAndPlan_id(day.getDay_counter()+1,plan_id);
+        Long plan_id = day.getPlan().getId();
+        Day downDay = dayRepository.findByDayCounterAndPlanId(day.getDayCounter()+1,plan_id);
 
         if (downDay == null){
             throw new IllegalStateException("Down day not found for plan " + plan_id);
         }
 
-        downDay.setDay_counter(0);
+        downDay.setDayCounter(0);
         dayRepository.save(downDay);
 
-        day.setDay_counter(day.getDay_counter()+1);
+        day.setDayCounter(day.getDayCounter()+1);
         dayRepository.save(day);
 
-        downDay.setDay_counter(day.getDay_counter()-1);
+        downDay.setDayCounter(day.getDayCounter()-1);
         dayRepository.save(downDay);
     }
 
@@ -153,29 +154,29 @@ public class DayServiceImpl implements DayService{
         Plan plan = day.getPlan();
 
 
-        boolean isLast = (day.getDay_counter() == plan.getAvailable_counter()-1);
+        boolean isLast = (day.getDayCounter() == plan.getAvailableCounter()-1);
 
         if (isLast) {
-            plan.setAvailable_counter(plan.getAvailable_counter() - 1);
+            plan.setAvailableCounter(plan.getAvailableCounter() - 1);
             planRepository.save(plan);
             dayRepository.deleteById(day_id);
             return;
         }
 
         List<Day> listDay =
-                dayRepository.findAllByPlan_idAndDay_counterGreaterThanOrderByDay_counterAsc(
-                        plan.getPlan_id(), day.getDay_counter());
+                dayRepository.findAllByPlanIdAndDayCounterGreaterThanOrderByDayCounterAsc(
+                        plan.getId(), day.getDayCounter());
 
 
-        day.setDay_counter(0);
+        day.setDayCounter(0);
         dayRepository.save(day);
 
         for (Day dayup : listDay) {
-            dayup.setDay_counter(dayup.getDay_counter() - 1);
+            dayup.setDayCounter(dayup.getDayCounter() - 1);
             dayRepository.save(dayup);
         }
 
-        plan.setAvailable_counter(plan.getAvailable_counter() - 1);
+        plan.setAvailableCounter(plan.getAvailableCounter() - 1);
         planRepository.save(plan);
 
         dayRepository.deleteById(day_id);
