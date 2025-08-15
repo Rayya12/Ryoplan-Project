@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     public User(){}
@@ -55,6 +55,23 @@ public class User {
     @Column(name = "country",columnDefinition = "VARCHAR(255)")
     private String country;
 
+    // di entitas User
+    @Column(name = "photo_url", length = 512)
+    private String photoUrl;
+
+    @Column(name = "photo_key", length = 255)
+    private String photoKey;
+
+    @Column(name = "photo_content_type", length = 100)
+    private String photoContentType;
+
+    @Column(name = "photo_size_bytes")
+    private Long photoSizeBytes;
+
+    @Column(name = "photo_etag", length = 100)
+    private String photoEtag;
+
+
     @ManyToMany
     @JoinTable(
             name = "user_plan",
@@ -73,6 +90,11 @@ public class User {
     public String getPhoneNumber() {return phoneNumber;}
     public String getUsername() {return username;}
     public List<Plan> getPlanList() {return planList;}
+    public Long getPhotoSizeBytes() {return photoSizeBytes;}
+    public String getPhotoContentType() {return photoContentType;}
+    public String getPhotoEtag() {return photoEtag;}
+    public String getPhotoKey() {return photoKey;}
+    public String getPhotoUrl() {return photoUrl;}
 
     public void setAddress(String address) {this.address = address;}
     public void setCountry(String country) {this.country = country;}
@@ -84,6 +106,11 @@ public class User {
     public void setId(Long id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
     public void setPlanList(List<Plan> planList) {this.planList = planList;}
+    public void setPhotoContentType(String photoContentType) {this.photoContentType = photoContentType;}
+    public void setPhotoKey(String photoKey) {this.photoKey = photoKey;}
+    public void setPhotoSizeBytes(Long photoSizeBytes) {this.photoSizeBytes = photoSizeBytes;}
+    public void setPhotoEtag(String photoEtag) {this.photoEtag = photoEtag;}
+    public void setPhotoUrl(String photoUrl) {this.photoUrl = photoUrl;}
 
     public void addPlan(Plan p) {
         if (this.planList.add(p)){

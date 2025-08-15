@@ -78,7 +78,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<PlanListDTO> getPlanListForUser(Long user_id) {
-        List<Plan> listPlanById = planRepository.findAllPlanByUserId(user_id);
+        List<Plan> listPlanById = userRepository.findById(user_id).orElseThrow(()->new EntityNotFoundException("Cannot found user with id: "+user_id)).getPlanList();
         List<PlanListDTO> dtoPlanList = new ArrayList<>();
         if (listPlanById != null && !listPlanById.isEmpty()){
             dtoPlanList = listPlanById.stream().map(planku -> {
