@@ -8,6 +8,9 @@ import RayCorp.Ryoplan.Repositories.UserRepository;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,13 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     @Override
     public void register(UserRegisterDTO userRegisterDTO) {
@@ -39,12 +48,23 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void login(UserLoginDTO userLoginDTO) {
-        Optional<User> user = userRepository.findByEmail(userLoginDTO.email);
-        if (user == null || !passwordEncoder.matches(userLoginDTO.getPassword(),user.getPassword())){
+    public String login(UserLoginDTO userLoginDTO) {
+        Optional<User> user = userRepository.findByEmail(userLoginDTO.getEmail());
+
+        if (user.isPresent()) {
+            User u = user.get(); // ambil data dari Optional
+            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(u.getEmail(),u.getPassword()));
+            if (authentication.isAuthenticated()){
+                return jwtService.generateToken(u.getEmail());
+            }else{
+                throw new RuntimeException("Invalid email or password");
+            }
+            
+
+        } else {
             throw new RuntimeException("Invalid email or password");
         }
-    }
+}
 
 
 

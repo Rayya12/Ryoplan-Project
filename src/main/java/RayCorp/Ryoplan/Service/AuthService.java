@@ -5,6 +5,6 @@ import RayCorp.Ryoplan.DTO.UserRegisterDTO;
 
 public interface AuthService {
     public void register(UserRegisterDTO userRegisterDTO);
-    public void login(UserLoginDTO userLoginDTO);
+    public String login(UserLoginDTO userLoginDTO);
 
 }
