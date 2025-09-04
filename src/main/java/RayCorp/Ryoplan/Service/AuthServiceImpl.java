@@ -4,6 +4,9 @@ import RayCorp.Ryoplan.DTO.UserLoginDTO;
 import RayCorp.Ryoplan.DTO.UserRegisterDTO;
 import RayCorp.Ryoplan.Model.User;
 import RayCorp.Ryoplan.Repositories.UserRepository;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void login(UserLoginDTO userLoginDTO) {
-        User user = userRepository.findByEmail(userLoginDTO.email);
+        Optional<User> user = userRepository.findByEmail(userLoginDTO.email);
         if (user == null || !passwordEncoder.matches(userLoginDTO.getPassword(),user.getPassword())){
             throw new RuntimeException("Invalid email or password");
         }
