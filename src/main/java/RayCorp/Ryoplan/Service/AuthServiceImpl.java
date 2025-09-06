@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     @Override
-    public void register(UserRegisterDTO userRegisterDTO) {
+    public String register(UserRegisterDTO userRegisterDTO) {
         if (userRepository.existsByEmail(userRegisterDTO.getEmail())){
             throw new RuntimeException("Email is already used");
         }
@@ -45,6 +45,9 @@ public class AuthServiceImpl implements AuthService {
         user.setPhoneNumber(userRegisterDTO.getPhoneNumber());
 
         userRepository.save(user);
+
+        return "User registered successfully";
+
     }
 
     @Override
@@ -53,7 +56,8 @@ public class AuthServiceImpl implements AuthService {
 
         if (user.isPresent()) {
             User u = user.get(); // ambil data dari Optional
-            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(u.getEmail(),u.getPassword()));
+            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(u.getEmail(),userLoginDTO.getPassword()));
+            System.out.println(authentication.isAuthenticated());
             if (authentication.isAuthenticated()){
                 return jwtService.generateToken(u.getEmail());
             }else{

@@ -31,6 +31,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanShowDTO createPlan(CreatePlanDTO cdto) {
         Plan plan = new Plan();
+        System.out.println(cdto.getPlan_name());
         plan.setPlanName(cdto.getPlan_name());
         plan.setDescription(cdto.getDescription());
         plan.setLocation(cdto.getLocation());

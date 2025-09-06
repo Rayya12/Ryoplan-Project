@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreatePlanDTO {
@@ -14,7 +15,7 @@ public class CreatePlanDTO {
     private LocalDate tanggal_mulai;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate tanggal_selesai;
-    private List<PlanUserDTO> userList;
+    private List<PlanUserDTO> userList = new ArrayList<>();
 
     public CreatePlanDTO(){};
     public CreatePlanDTO(String plan_name,String description,String location,LocalDate tanggal_mulai, LocalDate tanggal_selesai,List<PlanUserDTO> userList){

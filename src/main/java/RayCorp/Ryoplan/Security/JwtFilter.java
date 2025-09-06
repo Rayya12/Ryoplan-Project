@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import RayCorp.Ryoplan.Service.JwtService;
+import RayCorp.Ryoplan.Service.MyUserDetailsService;
 
 import java.io.IOException;
 @Component
@@ -45,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
