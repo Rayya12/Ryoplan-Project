@@ -9,5 +9,4 @@ public interface UserProfileService {
     User updatePhoto(Long userId, MultipartFile file); // foto opsional endpoint terpisah
     User updateProfileAndPhoto(Long userId, UserProfileDTO dto, MultipartFile file);
 
-
 }

@@ -10,6 +10,8 @@ import RayCorp.Ryoplan.Repositories.PlanRepository;
 import RayCorp.Ryoplan.Repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Bool;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,8 +70,15 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public void deletePlan(Long plan_id) {
-        planRepository.deleteById(plan_id);
+    public Boolean deletePlan(Long plan_id) {
+        if (planRepository.existsById(plan_id)){
+            planRepository.deleteById(plan_id);
+            return true;
+        }else{
+            return false;
+        }
+        
+
     }
 
     @Override
@@ -77,13 +86,20 @@ public class PlanServiceImpl implements PlanService {
         return PlanMapper.toPlanShowDTO(planRepository.findById(plan_id).orElseThrow(()->new EntityNotFoundException("Plan with id: "+plan_id+" is not found")));
     }
 
+
     @Override
-    public List<PlanListDTO> getPlanListForUser(Long user_id) {
-        List<Plan> listPlanById = userRepository.findById(user_id).orElseThrow(()->new EntityNotFoundException("Cannot found user with id: "+user_id)).getPlanList();
+    public List<PlanListDTO> getPlanListForUserWithName(String name, Long userId) {
+        List<Plan> listPlan = new ArrayList<>();
+        if (name == null || name.isBlank()){
+            listPlan = userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("Cannot found user with id: "+userId)).getPlanList();
+        }else{
+            listPlan = planRepository.findByPlanNameContainingIgnoreCaseAndUserList_Id(name, userId);
+        }
         List<PlanListDTO> dtoPlanList = new ArrayList<>();
-        if (listPlanById != null && !listPlanById.isEmpty()){
-            dtoPlanList = listPlanById.stream().map(planku -> {
+        if (listPlan != null && !listPlan.isEmpty()){
+            dtoPlanList = listPlan.stream().map(planku->{
                 PlanListDTO dto = new PlanListDTO();
+                dto.setPlan_id(planku.getId());
                 dto.setPlan_name(planku.getPlanName());
                 dto.setBudget(planku.getBudgetPlan());
                 dto.setTanggal_mulai(planku.getTanggalMulai());
@@ -93,4 +109,8 @@ public class PlanServiceImpl implements PlanService {
         }
         return dtoPlanList;
     }
+
+    
+
+
 }
